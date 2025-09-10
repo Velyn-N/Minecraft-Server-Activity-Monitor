@@ -1,28 +1,29 @@
 package me.velyn.mcactivitymonitor.dataprovider;
 
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.eclipse.microprofile.rest.client.inject.*;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.QueryParam;
-
-import java.util.List;
-import java.util.Set;
+import jakarta.ws.rs.*;
 
 /**
  * A REST Client for the mcstatus.io API
  */
-@RegisterRestClient(baseUri = "https://stage.code.quarkus.io/api")
-public interface MyRemoteService {
+@RegisterRestClient(baseUri = "https://api.mcstatus.io/v2")
+public interface McStatusIoV2Client {
 
     @GET
-    @Path("/extensions")
-    Set<Extension> getExtensionsById(@QueryParam("id") String id);
+    @Path("/status/java/{address}")
+    JavaStatus getStatusJava(
+            @PathParam("address") String address,
+            @QueryParam("query") boolean query
+    );
 
-    class Extension {
-        public String id;
-        public String name;
-        public String shortName;
-        public List<String> keywords;
+    class JavaStatus {
+        public boolean online;
+        public long retrieved_at;
+        public Players players;
+
+        public static class Players {
+            public int online;
+        }
     }
 }
