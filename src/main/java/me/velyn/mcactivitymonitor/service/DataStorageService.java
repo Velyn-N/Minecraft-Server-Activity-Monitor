@@ -163,4 +163,35 @@ public class DataStorageService {
             Log.error("Failed to write servers", e);
         }
     }
+    
+    public synchronized boolean deleteServer(String server) {
+        if (server == null) return false;
+        Set<ServerRecord> all = new HashSet<>(getServers());
+        boolean removed = all.removeIf(sr -> Objects.equals(sr.server, server));
+        if (!removed) return false;
+        Path path = Paths.get(serversFilePath);
+        try {
+            Files.createDirectories(path.getParent());
+        } catch (Exception ignored) {}
+        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            CSVFormat format = CSVFormat.DEFAULT.builder()
+                    .setHeader("server", "lastFetchTime")
+                    .setDelimiter(SEP)
+                    .get();
+            try (CSVPrinter printer = new CSVPrinter(writer, format)) {
+                for (ServerRecord sr : all) {
+                    printer.printRecord(
+                            sr.server != null ? sr.server : "",
+                            sr.lastFetchTime != null ? DATE_FMT.format(sr.lastFetchTime) : ""
+                    );
+                }
+            }
+            try { serversCacheMtime = Files.getLastModifiedTime(path).toMillis(); } catch (IOException ignored) {}
+            serversCache = all;
+        } catch (IOException e) {
+            Log.error("Failed to write servers", e);
+        }
+        return true;
+    }
 }
