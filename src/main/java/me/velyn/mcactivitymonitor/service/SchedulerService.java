@@ -28,9 +28,10 @@ public class SchedulerService {
             cron = "${scheduler.server.check.cron}",
             concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
     public void scheduledServerCheck() {
+        LocalDateTime now = LocalDateTime.now();
         Set<ServerRecord> servers = dataStorageService.getServers();
 
-        LocalDateTime checkDelay = LocalDateTime.now().minusMinutes(serverCheckDelay);
+        LocalDateTime checkDelay = now.minusMinutes(serverCheckDelay);
         List<ServerRecord> checkServers = servers.stream()
                 .filter(sr -> checkDelay.isAfter(sr.lastFetchTime))
                 .sorted(Comparator.comparing(sr -> sr.lastFetchTime))
@@ -38,6 +39,11 @@ public class SchedulerService {
 
         // The API rate limits at 5 requests per second per IP
         checkServers = checkServers.subList(0, Math.min(checkServers.size(), 5));
+
+        for (ServerRecord sr : checkServers) {
+            sr.lastFetchTime = now;
+            dataStorageService.writeServerRecord(sr);
+        }
 
         Log.infof("Checking %d servers", checkServers.size());
         dataStorageService.writeActivityRecords(dataProcessingService.checkServers(checkServers));
