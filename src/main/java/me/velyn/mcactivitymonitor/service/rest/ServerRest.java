@@ -10,22 +10,15 @@ import me.velyn.mcactivitymonitor.data.*;
 import me.velyn.mcactivitymonitor.service.*;
 
 @Path("/rest/server")
+@Produces(MediaType.APPLICATION_JSON)
 public class ServerRest {
 
     @Inject
     DataStorageService dataStorageService;
 
-    @GET
-    public Response getServers() {
-        return Response.ok(dataStorageService.getServers()).build();
-    }
-
     @POST
     public Response addServer(String server) {
-        ServerRecord record = new ServerRecord();
-        record.server = server;
-        record.lastFetchTime = LocalDate.of(1970, 1, 1).atStartOfDay();
-        dataStorageService.writeServerRecord(record);
+        dataStorageService.addServer(server);
         return Response.ok().build();
     }
     
@@ -35,5 +28,17 @@ public class ServerRest {
         boolean removed = dataStorageService.deleteServer(server);
         if (removed) return Response.noContent().build();
         return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @GET
+    @Path("/{server}/activities")
+    public Response getActivities(@PathParam("server") String server) {
+        boolean hasServerFilter = server != null && !server.trim().isBlank();
+
+        if (!hasServerFilter) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        return Response.ok(dataStorageService.getActivityRecordsForServer(server)).build();
     }
 }

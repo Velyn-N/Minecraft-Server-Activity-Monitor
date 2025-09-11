@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -133,6 +133,13 @@ public class DataStorageService {
         serversCache = set;
         serversCacheMtime = mtime;
         return set;
+    }
+
+    public synchronized void addServer(String server) {
+        ServerRecord record = new ServerRecord();
+        record.server = server;
+        record.lastFetchTime = LocalDate.of(1970, 1, 1).atStartOfDay();
+        writeServerRecord(record);
     }
 
     public synchronized void writeServerRecord(ServerRecord record) {

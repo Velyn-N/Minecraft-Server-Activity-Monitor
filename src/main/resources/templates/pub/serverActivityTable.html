@@ -1,0 +1,32 @@
+<table>
+  <thead>
+  <tr>
+    <th>Server</th>
+    <th>Record Creation Time</th>
+    <th>Data Retrieval Time</th>
+    <th>Online</th>
+    <th>Player Count</th>
+  </tr>
+  </thead>
+  <tbody>
+  {#for activityRecord in cdi:quteService.getActivities(http:param('server'))}
+    <tr>
+      <td>
+        {activityRecord.server}
+      </td>
+      <td>
+        {cdi:quteService.formatDateTime(activityRecord.recordCreationTime)}
+      </td>
+      <td>
+        {cdi:quteService.formatDateTime(activityRecord.dataRetrievalTime)}
+      </td>
+      <td>
+        {activityRecord.online}
+      </td>
+      <td>
+        {activityRecord.playerCount}
+      </td>
+    </tr>
+  {/for}
+  </tbody>
+</table>

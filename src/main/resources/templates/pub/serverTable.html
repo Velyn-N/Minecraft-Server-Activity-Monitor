@@ -1,0 +1,22 @@
+<table>
+  <thead>
+  <tr>
+    <th>Server</th>
+    <th>Last Check</th>
+  </tr>
+  </thead>
+  <tbody>
+  {#for serverRecord in cdi:quteService.getServers()}
+    <tr>
+      <td>
+        <a onclick="changeActivityTableServer('{serverRecord.server}')">
+          {serverRecord.server}
+        </a>
+      </td>
+      <td>
+        {cdi:quteService.formatDateTime(serverRecord.lastFetchTime)}
+      </td>
+    </tr>
+  {/for}
+  </tbody>
+</table>

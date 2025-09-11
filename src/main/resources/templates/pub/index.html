@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minecraft Server Activity Monitor</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="/js/main.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Minecraft Server Activity Monitor</h1>
+  <p>A simple application that monitors the activity of Minecraft servers.</p>
+  <p>Click on a server to view its activity:</p>
+  <div id="serverTableWrapper">
+    {#include pub/serverTable.html}{/include}
+  </div>
+  <div id="serverActivityTableWrapper">
+  </div>
+</div>
+</body>
+</html>
