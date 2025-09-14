@@ -23,8 +23,7 @@ public class ServerRest {
     }
     
     @DELETE
-    @Path("/{server}")
-    public Response deleteServer(@PathParam("server") String server) {
+    public Response deleteServer(String server) {
         boolean removed = dataStorageService.deleteServer(server);
         if (removed) return Response.noContent().build();
         return Response.status(Response.Status.NOT_FOUND).build();

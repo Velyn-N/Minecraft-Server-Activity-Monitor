@@ -11,9 +11,25 @@
 <div class="container">
   <h1>Minecraft Server Activity Monitor</h1>
   <p>A simple application that monitors the activity of Minecraft servers.</p>
-  <p>Click on a server to view its activity:</p>
+  <label for="refreshIntervalSelect">
+    Refresh Interval:
+  </label>
+  <select id="refreshIntervalSelect" onchange="refreshCountdownInterval = this.value">
+    <option value="5">5s</option>
+    <option value="10">10s</option>
+    <option value="30" selected>30s</option>
+    <option value="60">60s</option>
+  </select>
+  <span id="refreshCountdownDisplay">
+    30
+  </span>
   <div id="serverTableWrapper">
     {#include pub/serverTable.html}{/include}
+  </div>
+  <div>
+    <label for="newServerAddress">Add a new server:</label>
+    <input id="newServerAddress" type="text" placeholder="Domain or IP">
+    <button onclick="addServer(document.getElementById('newServerAddress').value)">Add Server</button>
   </div>
   <div id="serverActivityTableWrapper">
   </div>
