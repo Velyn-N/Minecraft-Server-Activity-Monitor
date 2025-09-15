@@ -28,16 +28,4 @@ public class ServerRest {
         if (removed) return Response.noContent().build();
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
-    @GET
-    @Path("/{server}/activities")
-    public Response getActivities(@PathParam("server") String server) {
-        boolean hasServerFilter = server != null && !server.trim().isBlank();
-
-        if (!hasServerFilter) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        return Response.ok(dataStorageService.getActivityRecordsForServer(server)).build();
-    }
 }

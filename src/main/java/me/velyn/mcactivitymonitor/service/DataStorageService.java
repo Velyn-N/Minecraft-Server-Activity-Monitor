@@ -61,42 +61,60 @@ public class DataStorageService {
             Log.error("Failed to write activity records", e);
         }
     }
+    
+    public record ActivityRecordFilter(LocalDateTime from, LocalDateTime to, String server) {}
 
-    public List<ActivityRecord> getActivityRecordsForServer(String server) {
-        List<ActivityRecord> result = new ArrayList<>();
-        Path path = Paths.get(activityRecordsFilePath);
-        if (!Files.exists(path)) return result;
-        CSVFormat format = CSVFormat.DEFAULT.builder()
-                .setHeader("recordCreationTime", "dataRetrievalTime", "online", "server", "playerCount")
-                .setSkipHeaderRecord(true)
-                .setDelimiter(SEP)
-                .get();
-        try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
-             CSVParser parser = CSVParser.parse(reader, format)) {
-            for (CSVRecord rec : parser) {
-                String srv = rec.get("server");
-                if (!Objects.equals(srv, server)) continue;
-                ActivityRecord ar = new ActivityRecord();
-                String rct = rec.get("recordCreationTime");
-                String drt = rec.get("dataRetrievalTime");
-                String onl = rec.get("online");
-                String plc = rec.get("playerCount");
-                ar.recordCreationTime = rct == null || rct.isEmpty() ? null : LocalDateTime.parse(rct, DATE_FMT);
-                ar.dataRetrievalTime = drt == null || drt.isEmpty() ? null : LocalDateTime.parse(drt, DATE_FMT);
-                ar.online = onl != null && (onl.equalsIgnoreCase("true") || onl.equals("1"));
-                ar.server = srv;
-                try {
-                    ar.playerCount = plc == null || plc.isEmpty() ? 0 : Integer.parseInt(plc);
-                } catch (NumberFormatException ex) {
-                    ar.playerCount = 0;
-                }
-                result.add(ar);
+public List<ActivityRecord> getActivityRecords(ActivityRecordFilter filter) {
+    boolean hasFilterServer = filter != null && filter.server() != null;
+    boolean hasFilterFrom = filter != null && filter.from() != null;
+    boolean hasFilterTo = filter != null && filter.to() != null;
+
+    List<ActivityRecord> result = new ArrayList<>();
+    Path path = Paths.get(activityRecordsFilePath);
+    if (!Files.exists(path)) return result;
+    CSVFormat format = CSVFormat.DEFAULT.builder()
+            .setHeader("recordCreationTime", "dataRetrievalTime", "online", "server", "playerCount")
+            .setSkipHeaderRecord(true)
+            .setDelimiter(SEP)
+            .get();
+    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
+         CSVParser parser = CSVParser.parse(reader, format)) {
+        for (CSVRecord rec : parser) {
+            String srv = rec.get("server");
+
+            if (hasFilterServer && !Objects.equals(srv, filter.server())) {
+                continue;
             }
-        } catch (IOException e) {
-            Log.error("Failed to read activity records", e);
+
+            ActivityRecord ar = new ActivityRecord();
+            String rct = rec.get("recordCreationTime");
+            String drt = rec.get("dataRetrievalTime");
+            String onl = rec.get("online");
+            String plc = rec.get("playerCount");
+            ar.recordCreationTime = rct == null || rct.isEmpty() ? null : LocalDateTime.parse(rct, DATE_FMT);
+            ar.dataRetrievalTime = drt == null || drt.isEmpty() ? null : LocalDateTime.parse(drt, DATE_FMT);
+            ar.online = onl != null && (onl.equalsIgnoreCase("true") || onl.equals("1"));
+            ar.server = srv;
+            try {
+                ar.playerCount = plc == null || plc.isEmpty() ? 0 : Integer.parseInt(plc);
+            } catch (NumberFormatException ex) {
+                ar.playerCount = 0;
+            }
+
+            if (hasFilterFrom && ar.recordCreationTime != null && ar.recordCreationTime.isBefore(filter.from())) {
+                continue;
+            }
+            if (hasFilterTo && ar.recordCreationTime != null && ar.recordCreationTime.isAfter(filter.to())) {
+                continue;
+            }
+
+            result.add(ar);
         }
-        return result;
+    } catch (IOException e) {
+        Log.error("Failed to read activity records", e);
     }
+    return result;
+}
 
     public synchronized Set<ServerRecord> getServers() {
         Path path = Paths.get(serversFilePath);

@@ -26,6 +26,6 @@ public class QuteService {
     }
 
     public List<ActivityRecord> getActivities(String server) {
-        return dataStorageService.getActivityRecordsForServer(server);
+        return dataStorageService.getActivityRecords(new DataStorageService.ActivityRecordFilter(null, null, server));
     }
 }
