@@ -1,6 +1,7 @@
 let activityTableServer = null;
 let refreshCountdownInterval = 30;
 let refreshCountdown = refreshCountdownInterval;
+let refreshCountdownPaused = false;
 
 document.addEventListener("DOMContentLoaded", function() {
     setInterval(countdownStep, 1000);
@@ -8,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 function countdownStep() {
+    if (refreshCountdownPaused) {
+        return;
+    }
     refreshCountdown--;
     if (refreshCountdown <= 0) {
         reloadServerTable();
@@ -18,6 +22,10 @@ function countdownStep() {
         refreshCountdown = refreshCountdownInterval;
     }
     document.getElementById('refreshCountdownDisplay').innerText = '' + refreshCountdown;
+}
+
+function pauseOrResumeRefreshCountdown() {
+    refreshCountdownPaused = !refreshCountdownPaused;
 }
 
 function changeActivityTableServer(server) {
