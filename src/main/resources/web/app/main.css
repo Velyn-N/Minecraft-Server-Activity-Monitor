@@ -26,3 +26,8 @@ td {
 td:last-child {
     border-right: gray 1px solid;
 }
+
+.line {
+    --aspect-ratio: 21 / 9;
+    background-color: #f6f6f6;
+}

@@ -18,6 +18,17 @@
     <surefire-plugin.version>3.5.3</surefire-plugin.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>mvnpm.org</id>
+      <name>mvnpm</name>
+      <url>https://repo.mvnpm.org/maven2</url>
+    </repository>
+  </repositories>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -39,8 +50,8 @@
 
     <dependency>
       <groupId>org.mvnpm</groupId>
-      <artifactId>chart.js</artifactId>
-      <version>4.4.7</version>
+      <artifactId>charts.css</artifactId>
+      <version>1.2.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
