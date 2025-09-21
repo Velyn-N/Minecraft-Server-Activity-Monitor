@@ -9,6 +9,7 @@ import jakarta.enterprise.context.*;
 import jakarta.inject.*;
 import me.velyn.mcactivitymonitor.data.*;
 import me.velyn.mcactivitymonitor.service.*;
+import me.velyn.mcactivitymonitor.service.DataStorageService.*;
 
 @Named("quteService")
 @ApplicationScoped
@@ -31,8 +32,16 @@ public class QuteService {
         return dataStorageService.getServers();
     }
 
-    public List<ActivityRecord> getActivities(String server) {
-        return dataStorageService.getActivityRecords(new DataStorageService.ActivityRecordFilter(null, null, server));
+    public List<ActivityRecord> getActivities(String server, int lastXDays) {
+        ActivityRecordFilter filter = new ActivityRecordFilter(null, null, server);
+        if (lastXDays >= 0) {
+            filter = new ActivityRecordFilter(LocalDate.now().minusDays(lastXDays).atStartOfDay(), null, server);
+        }
+        return dataStorageService.getActivityRecords(filter);
+    }
+
+    public ActivityRecord getLastRecordedActivity(String server) {
+        return dataStorageService.getLastActivityRecord(server);
     }
 
     public Map<LocalDate, List<ActivityRecord>> groupByDate(List<ActivityRecord> records) {

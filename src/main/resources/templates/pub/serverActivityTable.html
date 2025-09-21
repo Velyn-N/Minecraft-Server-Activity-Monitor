@@ -1,16 +1,24 @@
-<table>
-  {#for dateEntry in cdi:quteService.groupByDate(cdi:quteService.getActivities(http:param('server'))).entrySet()}
-    <tr style="font-size: x-large">
+<table class="activity-table">
+  <caption>
+    {#if http:param('server') == null}
+      Activity for all servers (last 30 days)
+    {#else}
+      Activity for {http:param('server')} (last 30 days)
+      <button onclick="changeActivityTableServer(null)" title="Clear selected server">Unselect</button>
+    {/if}
+  </caption>
+  {#for dateEntry in cdi:quteService.groupByDate(cdi:quteService.getActivities(http:param('server'), 7)).entrySet()}
+    <tr class="date-row">
       <th colspan="5">
         {cdi:quteService.formatDate(dateEntry.key)}
       </th>
     </tr>
-    <tr style="font-weight: bold">
+    <tr class="head-row">
       <td>Server</td>
-      <td>Record Creation Time</td>
-      <td>Data Retrieval Time</td>
+      <td>Record creation</td>
+      <td>Data retrieval</td>
       <td>Online</td>
-      <td>Player Count</td>
+      <td>Players</td>
     </tr>
     {#for activityRecord in dateEntry.value}
     <tr>
@@ -24,10 +32,14 @@
         {cdi:quteService.formatDateTime(activityRecord.dataRetrievalTime)}
       </td>
       <td>
-        {activityRecord.online}
+        {#if activityRecord.online}
+          <span class="badge badge-success" title="Online">Online</span>
+        {#else}
+          <span class="badge badge-danger" title="Offline">Offline</span>
+        {/if}
       </td>
       <td>
-        {activityRecord.playerCount}
+        <span class="badge" title="Player count">{activityRecord.playerCount}</span>
       </td>
     </tr>
     {/for}

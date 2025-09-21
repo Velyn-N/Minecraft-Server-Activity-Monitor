@@ -1,17 +1,19 @@
-<table>
+<table class="server-table">
   <caption>
-    Currently monitored Servers
-    <button onclick="changeActivityTableServer(null)">Unchoose Server</button>
+    Currently monitored servers
   </caption>
   <thead>
   <tr>
     <th>Server</th>
-    <th>Last Check</th>
-    <th></th>
+    <th>Online</th>
+    <th>Players</th>
+    <th class="col-last-check">Last check</th>
+    <th class="col-actions"></th>
   </tr>
   </thead>
   <tbody>
   {#for serverRecord in cdi:quteService.getServers()}
+    {#let latest=cdi:quteService.getLastRecordedActivity(serverRecord.server)}
     <tr>
       <td>
         <a onclick="changeActivityTableServer('{serverRecord.server}')" title="Show server activity">
@@ -19,14 +21,31 @@
         </a>
       </td>
       <td>
-        {cdi:quteService.formatDateTime(serverRecord.lastFetchTime)}
+        {#if latest != null}
+          {#if latest.online}
+            <span class="badge badge-success" title="Online">Online</span>
+          {#else}
+            <span class="badge badge-danger" title="Offline">Offline</span>
+          {/if}
+        {#else}
+          <span class="badge" title="No data">—</span>
+        {/if}
       </td>
       <td>
-        <a onclick="removeServer('{serverRecord.server}')" title="Remove server">
-          x
-        </a>
+        {#if latest != null}
+          <span class="badge" title="Current players">{latest.playerCount}</span>
+        {#else}
+          <span class="badge" title="No data">—</span>
+        {/if}
+      </td>
+      <td class="col-last-check ">
+        {cdi:quteService.formatDateTime(serverRecord.lastFetchTime)}
+      </td>
+      <td class="col-actions">
+        <a class="remove" onclick="removeServer('{serverRecord.server}')" title="Remove server">✕</a>
       </td>
     </tr>
+    {/let}
   {/for}
   </tbody>
 </table>

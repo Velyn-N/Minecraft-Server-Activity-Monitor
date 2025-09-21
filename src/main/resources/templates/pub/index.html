@@ -2,38 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Minecraft Server Activity Monitor</title>
 
   <link rel="stylesheet" href="/main.css">
-  <script src="/main.js"></script>
+  <script defer src="/main.js"></script>
 </head>
 <body>
 <div class="container">
-  <h1>Minecraft Server Activity Monitor</h1>
-  <p>A simple application that monitors the activity of Minecraft servers.</p>
-  <label for="refreshIntervalSelect">
-    Refresh Interval:
-  </label>
-  <select id="refreshIntervalSelect" onchange="refreshCountdownInterval = this.value">
-    <option value="5">5s</option>
-    <option value="10">10s</option>
-    <option value="30" selected>30s</option>
-    <option value="60">60s</option>
-  </select>
-  <span id="refreshCountdownDisplay">
-    30
-  </span>
-  <button onclick="pauseOrResumeRefreshCountdown()">Play/Pause</button>
-  <div id="serverTableWrapper">
-    {#include pub/serverTable.html}{/include}
+  <h1 id="title">Minecraft Server Activity Monitor</h1>
+  <p id="subtitle">A simple application that monitors the activity of Minecraft servers.</p>
+
+  <div class="toolbar" role="group" aria-label="Auto refresh controls">
+    <label for="refreshIntervalSelect">
+      Refresh every
+    </label>
+    <select id="refreshIntervalSelect" onchange="setRefreshInterval(this.value)">
+      <option value="5">5s</option>
+      <option value="10">10s</option>
+      <option value="30" selected>30s</option>
+      <option value="60">60s</option>
+    </select>
+    <span class="badge" id="refreshCountdownDisplay" title="Seconds until next refresh">30</span>
+    <button id="toggleRefreshBtn" aria-pressed="false" onclick="pauseOrResumeRefreshCountdown()">Pause</button>
   </div>
-  <div>
-    <label for="newServerAddress">Add a new server:</label>
-    <input id="newServerAddress" type="text" placeholder="Domain or IP">
-    <button onclick="addServer(document.getElementById('newServerAddress').value)">Add Server</button>
+
+  <div class="toolbar" role="tablist" aria-label="View switcher">
+    <button id="showServersBtn" role="tab" aria-selected="true" onclick="showSection('servers')">Servers</button>
+    <button id="showActivityBtn" role="tab" aria-selected="false" onclick="showSection('activity')">Activity</button>
   </div>
-  <div id="serverActivityTableWrapper">
-  </div>
+
+  <section id="section-servers">
+    <h2 class="section-title">Servers</h2>
+
+    <div class="toolbar" role="group" aria-label="Add server">
+      <label for="newServerAddress">Add server</label>
+      <input id="newServerAddress" type="text" placeholder="Domain or IP, Port optional"
+             autocomplete="off" spellcheck="false"/>
+      <button id="addServerBtn" onclick="addServer(document.getElementById('newServerAddress').value)">Add</button>
+    </div>
+
+    <div class="table-wrapper panel" id="serverTableWrapper">
+      {#include pub/serverTable.html}{/include}
+    </div>
+  </section>
+
+  <section id="section-activity" class="hidden">
+    <h2 class="section-title">Activity</h2>
+    <div class="table-wrapper panel" id="serverActivityTableWrapper">
+    </div>
+  </section>
 </div>
 </body>
 </html>
