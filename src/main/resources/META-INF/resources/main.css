@@ -41,6 +41,11 @@ body {
     margin-top: 0;
 }
 
+.hint {
+    font-size: x-small;
+    color: #878d97;
+}
+
 a {
     cursor: pointer;
     color: var(--primary);

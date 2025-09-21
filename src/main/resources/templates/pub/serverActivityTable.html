@@ -6,6 +6,10 @@
       Activity for {http:param('server')} (last 30 days)
       <button onclick="changeActivityTableServer(null)" title="Clear selected server">Unselect</button>
     {/if}
+    <br>
+    <span class="hint">
+      This data is accumulated for UI performance reasons. It is not guaranteed to be accurate as it shows averages.
+    </span>
   </caption>
   {#for dateEntry in cdi:quteService.groupByDate(cdi:quteService.getActivities(http:param('server'), 7)).entrySet()}
     <tr class="date-row">
@@ -15,23 +19,19 @@
     </tr>
     <tr class="head-row">
       <td>Server</td>
-      <td>Record creation</td>
       <td>Data retrieval</td>
       <td>Online</td>
       <td>Players</td>
     </tr>
-    {#for activityRecord in dateEntry.value}
+    {#for activityRecord in cdi:quteService.accumulateByHour(dateEntry.value)}
     <tr>
       <td>
         {activityRecord.server}
       </td>
       <td>
-        {cdi:quteService.formatDateTime(activityRecord.recordCreationTime)}
-      </td>
-      <td>
         {cdi:quteService.formatDateTime(activityRecord.dataRetrievalTime)}
       </td>
-      <td>
+      <td title="Has this server been offline in the shown time?">
         {#if activityRecord.online}
           <span class="badge badge-success" title="Online">Online</span>
         {#else}
