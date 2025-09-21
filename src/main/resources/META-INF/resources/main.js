@@ -5,7 +5,6 @@ let refreshCountdownPaused = false;
 
 document.addEventListener("DOMContentLoaded", function() {
     setInterval(countdownStep, 1000);
-    reloadServerActivityChart();
 })
 
 function countdownStep() {
@@ -15,7 +14,6 @@ function countdownStep() {
     refreshCountdown--;
     if (refreshCountdown <= 0) {
         reloadServerTable();
-        reloadServerActivityChart();
         if (activityTableServer) {
             reloadServerActivityTable();
         }
@@ -31,7 +29,6 @@ function pauseOrResumeRefreshCountdown() {
 function changeActivityTableServer(server) {
     activityTableServer = server;
     reloadServerActivityTable();
-    reloadServerActivityChart();
 }
 
 function addServer(server) {
@@ -70,15 +67,6 @@ function reloadServerActivityTable() {
     fetch(`/serverActivityTable.html?server=${encodeURIComponent(activityTableServer)}`).then(response => {
         response.text().then(text => {
             document.getElementById('serverActivityTableWrapper').innerHTML = text;
-        })
-    })
-}
-
-function reloadServerActivityChart() {
-    console.log("Loading Server Activity Chart for server: " + activityTableServer);
-    fetch(`/serverActivityChart.html?server=${encodeURIComponent(activityTableServer)}`).then(response => {
-        response.text().then(text => {
-            document.getElementById('serverActivityChartWrapper').innerHTML = text;
         })
     })
 }

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>Minecraft Server Activity Monitor</title>
 
-  {#bundle /}
-  <script src="/app.js"></script>
+  <link rel="stylesheet" href="/main.css">
+  <script src="/main.js"></script>
 </head>
 <body>
 <div class="container">
@@ -31,9 +31,6 @@
     <label for="newServerAddress">Add a new server:</label>
     <input id="newServerAddress" type="text" placeholder="Domain or IP">
     <button onclick="addServer(document.getElementById('newServerAddress').value)">Add Server</button>
-  </div>
-  <div id="serverActivityChartWrapper" style="width: 100%; max-width: 400px; margin: 0 auto;">
-    {#include pub/serverActivityChart.html}{/include}
   </div>
   <div id="serverActivityTableWrapper">
   </div>

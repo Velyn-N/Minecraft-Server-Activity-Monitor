@@ -47,18 +47,6 @@
       <artifactId>commons-csv</artifactId>
       <version>1.14.1</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.mvnpm</groupId>
-      <artifactId>charts.css</artifactId>
-      <version>1.2.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.web-bundler</groupId>
-      <artifactId>quarkus-web-bundler</artifactId>
-      <version>1.9.1</version>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest</artifactId>

@@ -1,15 +1,18 @@
 <table>
-  <thead>
-  <tr>
-    <th>Server</th>
-    <th>Record Creation Time</th>
-    <th>Data Retrieval Time</th>
-    <th>Online</th>
-    <th>Player Count</th>
-  </tr>
-  </thead>
-  <tbody>
-  {#for activityRecord in cdi:quteService.getActivities(http:param('server'))}
+  {#for dateEntry in cdi:quteService.groupByDate(cdi:quteService.getActivities(http:param('server'))).entrySet()}
+    <tr style="font-size: x-large">
+      <th colspan="5">
+        {cdi:quteService.formatDate(dateEntry.key)}
+      </th>
+    </tr>
+    <tr style="font-weight: bold">
+      <td>Server</td>
+      <td>Record Creation Time</td>
+      <td>Data Retrieval Time</td>
+      <td>Online</td>
+      <td>Player Count</td>
+    </tr>
+    {#for activityRecord in dateEntry.value}
     <tr>
       <td>
         {activityRecord.server}
@@ -27,6 +30,6 @@
         {activityRecord.playerCount}
       </td>
     </tr>
+    {/for}
   {/for}
-  </tbody>
 </table>
