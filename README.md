@@ -1,89 +1,63 @@
-# mc-activity-monitor
+# Minecraft Server Activity Monitor
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Poll Minecraft Servers for their online player count
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Features
 
-## Running the application in dev mode
+- Monitor the **player activity** of multiple Minecraft Servers using [mcstatus.io](https://mcstatus.io) API
+- Supports **multiple Storage Backends**: CSV, Databases coming soon
+- Highly **configurable** with Environment Variables
+- **Web UI** for Server Management and rudimentary Data Viewing
+- Fully documented **REST API** to be integrated into your stack
+- Easy Deployment using **Docker**
 
-You can run your application in dev mode that enables live coding using:
+## Deployment
 
-```shell script
-./mvnw quarkus:dev
+Run the Application using Docker:
+```shell
+docker run -d \
+  --name mc-monitor \
+  --restart unless-stopped \
+  -p 8080:8080 \
+  -e TZ=Europe/Berlin \
+  -v $(pwd)/data:/app \
+  ghcr.io/velyn-n/minecraft-server-activity-monitor:latest
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+Or Docker-Compose:
+```yaml
+services:
+  mc-monitor:
+    image: ghcr.io/velyn-n/minecraft-server-activity-monitor:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - "./data:/app"
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Ensure the Files in `/app` is writable by the container
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+#### *!!! Always remember to set the Timezone !!!*
 
-If you want to build an _über-jar_, execute the following command:
+## Configuration
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+The following Configuration Properties can be used to configure the application:
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+| Property                      | Environment Variable          | Default Value              |
+|-------------------------------|-------------------------------|----------------------------|
+| storage.file.servers          | STORAGE_FILE_SERVERS          | /app/servers.csv           |
+| storage.file.activity.records | STORAGE_FILE_ACTIVITY_RECORDS | /app/activity-records.csv  |
+| scheduler.server.check.cron   | SCHEDULER_SERVER_CHECK_CRON   | 0 * * * * ? (every minute) |
+|                               |                               |                            |
 
-## Creating a native executable
 
-You can create a native executable using:
+## API Documentation
 
-```shell script
-./mvnw package -Dnative
-```
+OpenAPI and Swagger UI are included and available at runtime:
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/mc-activity-monitor-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and
-  Jakarta Persistence
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and
-  Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on
-  it.
-- REST Client ([guide](https://quarkus.io/guides/rest-client)): Call REST services
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes
-  with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus
-  REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Scheduler ([guide](https://quarkus.io/guides/scheduler)): Schedule jobs and tasks
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-### REST Client
-
-Invoke different services through REST with JSON
-
-[Related guide section...](https://quarkus.io/guides/rest-client)
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+- OpenAPI (YAML): http://localhost:8080/api-docs/mc-activity-monitor
+- OpenAPI (JSON): http://localhost:8080/api-docs/mc-activity-monitor?format=json
+- Swagger UI: http://localhost:8080/swagger-ui
