@@ -23,8 +23,8 @@ public class ServerRest {
 
     @POST
     @Operation(summary = "Add a server", description = "Adds a server (hostname) to the tracked set.")
-    @RequestBody(required = true,
-            content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(example = "play.example.net")))
+    @RequestBody(
+            content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(examples = "play.example.net")))
     @APIResponse(responseCode = "200", description = "Server added")
     public Response addServer(String server) {
         dataStorageService.addServer(server);
@@ -33,8 +33,8 @@ public class ServerRest {
     
     @DELETE
     @Operation(summary = "Delete a server", description = "Removes the server (hostname) from the tracked set.")
-    @RequestBody(required = true,
-            content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(example = "play.example.net")))
+    @RequestBody(
+            content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(examples = "play.example.net")))
     @APIResponse(responseCode = "204", description = "Server deleted")
     @APIResponse(responseCode = "404", description = "Server not found")
     public Response deleteServer(String server) {
