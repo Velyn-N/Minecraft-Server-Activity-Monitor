@@ -5,6 +5,7 @@ import java.time.format.*;
 import java.util.*;
 import java.util.stream.*;
 
+import io.quarkus.logging.*;
 import jakarta.enterprise.context.*;
 import jakarta.inject.*;
 import me.velyn.mcactivitymonitor.data.*;
@@ -87,13 +88,14 @@ public class QuteService {
         double averagePlayers = workingSet.stream()
                 .mapToInt(ar -> ar.playerCount)
                 .average().orElse(0.0);
-        
-        boolean wasOnline = workingSet.stream().allMatch(ar -> ar.online);
-        
+
+
+        long onlineCount = workingSet.stream().filter(ar -> ar.online).count();
+
         ActivityRecord acc = new ActivityRecord();
         acc.recordCreationTime = hour;
         acc.dataRetrievalTime = hour;
-        acc.online = wasOnline;
+        acc.online = onlineCount > workingSet.size() / 2;
         acc.server = workingSet.getFirst().server;
         acc.playerCount = (int) Math.round(averagePlayers);
         
