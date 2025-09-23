@@ -1,18 +1,28 @@
 package me.velyn.mcactivitymonitor.service;
 
-import java.io.*;
+import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import me.velyn.mcactivitymonitor.data.ActivityRecord;
+import me.velyn.mcactivitymonitor.data.ServerRecord;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.time.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import org.apache.commons.csv.*;
-import org.eclipse.microprofile.config.inject.*;
-
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.*;
-import me.velyn.mcactivitymonitor.data.*;
+import java.util.stream.Stream;
 
 @ApplicationScoped
 public class DataStorageService {
@@ -31,6 +41,17 @@ public class DataStorageService {
     // ---------------------
     // Activity records
     // ---------------------
+
+    public long getActivityRecordsCount() {
+        Path path = Paths.get(activityRecordsFilePath);
+        if (!Files.exists(path)) return 0;
+        try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
+            return lines.count();
+        } catch (IOException e) {
+            Log.error("Failed to read activity records", e);
+            return 0;
+        }
+    }
 
     public void writeActivityRecords(List<ActivityRecord> records) {
         if (records == null || records.isEmpty()) {
