@@ -1,15 +1,16 @@
 package me.velyn.mcactivitymonitor.service;
 
-import java.time.*;
-import java.util.*;
+import io.quarkus.logging.Log;
+import io.quarkus.scheduler.Scheduled;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import me.velyn.mcactivitymonitor.data.ServerRecord;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import org.eclipse.microprofile.config.inject.*;
-
-import io.quarkus.logging.*;
-import io.quarkus.scheduler.*;
-import jakarta.enterprise.context.*;
-import jakarta.inject.*;
-import me.velyn.mcactivitymonitor.data.*;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class SchedulerService {

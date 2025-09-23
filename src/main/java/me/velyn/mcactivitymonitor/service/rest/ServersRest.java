@@ -1,18 +1,20 @@
 package me.velyn.mcactivitymonitor.service.rest;
 
-import java.util.Set;
-
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import me.velyn.mcactivitymonitor.data.ServerRecord;
+import me.velyn.mcactivitymonitor.service.DataStorageService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import jakarta.inject.*;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
-import me.velyn.mcactivitymonitor.data.*;
-import me.velyn.mcactivitymonitor.service.*;
+import java.util.Set;
 
 @Path("/rest/servers")
 @Produces(MediaType.APPLICATION_JSON)

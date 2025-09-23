@@ -1,10 +1,16 @@
 package me.velyn.mcactivitymonitor.service.rest;
 
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
-import java.util.stream.*;
-
+import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import me.velyn.mcactivitymonitor.data.ActivityRecord;
+import me.velyn.mcactivitymonitor.service.DataStorageService;
+import me.velyn.mcactivitymonitor.service.DataStorageService.ActivityRecordFilter;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -13,13 +19,14 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import io.quarkus.logging.*;
-import jakarta.inject.*;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
-import me.velyn.mcactivitymonitor.data.*;
-import me.velyn.mcactivitymonitor.service.*;
-import me.velyn.mcactivitymonitor.service.DataStorageService.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Path("/rest/activities")
 @Produces(MediaType.APPLICATION_JSON)

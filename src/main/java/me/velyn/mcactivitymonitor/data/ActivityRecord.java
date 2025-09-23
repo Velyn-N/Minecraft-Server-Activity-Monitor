@@ -1,8 +1,8 @@
 package me.velyn.mcactivitymonitor.data;
 
-import java.time.*;
-
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.time.LocalDateTime;
 
 @Schema(name = "ActivityRecord", description = "A single observation of a server's status at a point in time")
 public class ActivityRecord {

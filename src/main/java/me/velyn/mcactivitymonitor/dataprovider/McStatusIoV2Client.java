@@ -1,8 +1,10 @@
 package me.velyn.mcactivitymonitor.dataprovider;
 
-import org.eclipse.microprofile.rest.client.inject.*;
-
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /**
  * A REST Client for the mcstatus.io API

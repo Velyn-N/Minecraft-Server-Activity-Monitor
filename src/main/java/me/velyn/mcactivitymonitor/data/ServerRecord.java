@@ -1,8 +1,8 @@
 package me.velyn.mcactivitymonitor.data;
 
-import java.time.*;
-
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.time.LocalDateTime;
 
 @Schema(name = "ServerRecord", description = "A tracked server entry")
 public class ServerRecord {

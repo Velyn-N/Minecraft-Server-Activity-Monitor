@@ -1,16 +1,19 @@
 package me.velyn.mcactivitymonitor.ui;
 
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
-import java.util.stream.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import me.velyn.mcactivitymonitor.data.ActivityRecord;
+import me.velyn.mcactivitymonitor.data.ServerRecord;
+import me.velyn.mcactivitymonitor.service.DataStorageService;
+import me.velyn.mcactivitymonitor.service.DataStorageService.ActivityRecordFilter;
 
-import io.quarkus.logging.*;
-import jakarta.enterprise.context.*;
-import jakarta.inject.*;
-import me.velyn.mcactivitymonitor.data.*;
-import me.velyn.mcactivitymonitor.service.*;
-import me.velyn.mcactivitymonitor.service.DataStorageService.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Named("quteService")
 @ApplicationScoped

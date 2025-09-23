@@ -1,14 +1,17 @@
 package me.velyn.mcactivitymonitor.service;
 
-import java.time.*;
-import java.util.*;
+import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import me.velyn.mcactivitymonitor.data.ActivityRecord;
+import me.velyn.mcactivitymonitor.data.ServerRecord;
+import me.velyn.mcactivitymonitor.dataprovider.McStatusIoV2Client;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import org.eclipse.microprofile.rest.client.inject.*;
-
-import io.quarkus.logging.*;
-import jakarta.enterprise.context.*;
-import me.velyn.mcactivitymonitor.data.*;
-import me.velyn.mcactivitymonitor.dataprovider.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class DataProcessingService {
