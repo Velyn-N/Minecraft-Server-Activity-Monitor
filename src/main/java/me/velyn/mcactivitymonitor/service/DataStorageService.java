@@ -53,6 +53,21 @@ public class DataStorageService {
         }
     }
 
+    public long getDistinctDaysCount() {
+        Path path = Paths.get(activityRecordsFilePath);
+        if (!Files.exists(path)) return 0;
+        try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
+            return lines.map(ln -> parseActivityRecordLine(ln, null))
+                    .filter(Objects::nonNull)
+                    .map(ar -> ar.dataRetrievalTime.toLocalDate())
+                    .distinct()
+                    .count();
+        } catch (IOException e) {
+            Log.error("Failed to read activity records", e);
+            return 0;
+        }
+    }
+
     public void writeActivityRecords(List<ActivityRecord> records) {
         if (records == null || records.isEmpty()) {
             return;
@@ -140,7 +155,7 @@ public class DataStorageService {
 
             String srv = parts[3]; // server is at index 3
 
-            if (!Objects.equals(srv, targetServer)) {
+            if (targetServer != null && !Objects.equals(srv, targetServer)) {
                 return null;
             }
 

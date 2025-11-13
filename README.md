@@ -38,7 +38,7 @@ services:
       - "./data:/app"
 ```
 
-Ensure the Files in `/app` is writable by the container
+Ensure the Files in `/app` are writable by the container
 
 #### *!!! Always remember to set the Timezone !!!*
 
@@ -46,13 +46,12 @@ Ensure the Files in `/app` is writable by the container
 
 The following Configuration Properties can be used to configure the application:
 
-| Property                      | Environment Variable          | Default Value              |
-|-------------------------------|-------------------------------|----------------------------|
-| storage.file.servers          | STORAGE_FILE_SERVERS          | /app/servers.csv           |
-| storage.file.activity.records | STORAGE_FILE_ACTIVITY_RECORDS | /app/activity-records.csv  |
-| scheduler.server.check.cron   | SCHEDULER_SERVER_CHECK_CRON   | 0 * * * * ? (every minute) |
-|                               |                               |                            |
-
+| Property                      | Environment Variable          | Default Value             |
+|-------------------------------|-------------------------------|---------------------------|
+| storage.file.servers          | STORAGE_FILE_SERVERS          | /app/servers.csv          |
+| storage.file.activity.records | STORAGE_FILE_ACTIVITY_RECORDS | /app/activity-records.csv |
+| scheduler.server.check.cron   | SCHEDULER_SERVER_CHECK_CRON   | 0 * * * * ?               |
+|                               |                               |                           |
 
 ## API Documentation
 
@@ -61,3 +60,7 @@ OpenAPI and Swagger UI are included and available at runtime:
 - OpenAPI (YAML): http://localhost:8080/api-docs/mc-activity-monitor
 - OpenAPI (JSON): http://localhost:8080/api-docs/mc-activity-monitor?format=json
 - Swagger UI: http://localhost:8080/swagger-ui
+
+## Further Information
+
+[Usage with Dashboards](./docs/usage-with-dashboards.md)

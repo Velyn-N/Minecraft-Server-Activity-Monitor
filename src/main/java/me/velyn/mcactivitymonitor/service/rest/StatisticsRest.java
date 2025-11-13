@@ -29,7 +29,8 @@ public class StatisticsRest {
     public Response getStatistics() {
         return Response.ok(new Statistics(
                 dataStorageService.getServers().size(),
-                dataStorageService.getActivityRecordsCount()
+                dataStorageService.getActivityRecordsCount(),
+                dataStorageService.getDistinctDaysCount()
         )).build();
     }
 
@@ -38,6 +39,8 @@ public class StatisticsRest {
             @Schema(description = "Number of tracked servers", examples = "3")
             int serverCount,
             @Schema(description = "Total number of recorded activity entries", examples = "12456")
-            long recordedActivitiesCount
+            long recordedActivitiesCount,
+            @Schema(description = "Number of distinct days with recorded activity entries", examples = "12456")
+            long recordedDaysCount
     ) {}
 }
