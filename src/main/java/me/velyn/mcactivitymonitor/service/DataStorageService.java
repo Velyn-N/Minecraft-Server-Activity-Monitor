@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -345,5 +342,27 @@ public class DataStorageService {
         ar.server = srv;
         ar.playerCount = parseIntSafe(plc);
         return ar;
+    }
+
+    // ---------------------
+    // Backup
+    // ---------------------
+
+    public void copyFilesToBakFiles() {
+        Path activitySrc = Paths.get(activityRecordsFilePath);
+        Path activityBak = Paths.get(activityRecordsFilePath + ".bak");
+        try {
+            Files.copy(activitySrc, activityBak, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Log.error("Failed to copy activity-records.csv file", e);
+        }
+
+        Path serversSrc = Paths.get(serversFilePath);
+        Path serversBak = Paths.get(serversFilePath + ".bak");
+        try {
+            Files.copy(serversSrc, serversBak, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Log.error("Failed to copy servers.csv file", e);
+        }
     }
 }

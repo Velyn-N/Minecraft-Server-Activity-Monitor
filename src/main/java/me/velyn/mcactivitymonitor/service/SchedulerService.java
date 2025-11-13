@@ -49,4 +49,10 @@ public class SchedulerService {
         Log.infof("Checking %d servers", checkServers.size());
         dataStorageService.writeActivityRecords(dataProcessingService.checkServers(checkServers));
     }
+
+    @Scheduled(cron = "30 0 0 * * ?")
+    public void backupFiles() {
+        Log.info("Backing up files");
+        dataStorageService.copyFilesToBakFiles();
+    }
 }
